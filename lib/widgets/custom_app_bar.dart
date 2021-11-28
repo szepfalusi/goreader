@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-AppBar customAppBar() {
+AppBar customAppBar(String appBarTitle) {
   return AppBar(
-    title: const Text(
-      'GoReader',
-      style: TextStyle(
+    title: Text(
+      appBarTitle,
+      style: const TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 32,
       ),
