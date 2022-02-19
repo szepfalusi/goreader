@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:goreader/widgets/custom_app_bar.dart';
+import '../widgets/custom_app_bar.dart';
 
 class FoundTagScreen extends StatefulWidget {
   static String routeName = '/found';
@@ -13,7 +13,7 @@ class _FoundTagState extends State<FoundTagScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar("Találtam egy bilétát"),
+      appBar: customAppBar("I found a tag"),
     );
   }
 }

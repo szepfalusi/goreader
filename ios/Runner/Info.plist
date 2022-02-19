@@ -41,5 +41,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Heyho! We cannot make pictures, if we don&apos;t get permission to do this! :(</string>
+	<key>NFCReaderUsageDescription</key>
+	<string>Heyho! Please allow us to scan NFC tags with your phone.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Heyho! We cannot access your pictures, please give your permission to do this. :(</string>
 </dict>
 </plist>
