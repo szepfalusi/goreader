@@ -40,7 +40,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
       appBar: customAppBar('Tag'),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: ListView(
           children: <Widget>[
             FormBuilder(
               key: _formKey,
@@ -120,37 +120,34 @@ class _TagFormScreenState extends State<TagFormScreen> {
                 ],
               ),
             ),
-            Expanded(
-              child: MaterialButton(
-                color: Theme.of(context).colorScheme.secondary,
-                child: const Text(
-                  "Submit",
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () {
-                  _formKey.currentState?.save();
-                  if (_formKey.currentState!.validate()) {
-                    Provider.of<Tags>(context, listen: false).addTag(Tag(
-                      id: tagData.id != ''
-                          ? tagData.id
-                          : DateTime.now().toIso8601String(),
-                      name: _formKey.currentState?.value['name'],
-                      note: _formKey.currentState?.value['note'],
-                      imageUrl: 'TODO',
-                      visibleName: _formKey.currentState?.value['visible-name'],
-                      visibleAddress:
-                          _formKey.currentState?.value['visible-address'],
-                      visiblePhone:
-                          _formKey.currentState?.value['visible-phone'],
-                      visibleNote: _formKey.currentState?.value['visible-note'],
-                      userId: 'TODO',
-                    ));
-                    Navigator.of(context).pop();
-                  } else {
-                    print("validation failed");
-                  }
-                },
+            MaterialButton(
+              color: Theme.of(context).colorScheme.secondary,
+              child: const Text(
+                "Submit",
+                style: TextStyle(color: Colors.white),
               ),
+              onPressed: () {
+                _formKey.currentState?.save();
+                if (_formKey.currentState!.validate()) {
+                  Provider.of<Tags>(context, listen: false).addTag(Tag(
+                    id: tagData.id != ''
+                        ? tagData.id
+                        : DateTime.now().toIso8601String(),
+                    name: _formKey.currentState?.value['name'],
+                    note: _formKey.currentState?.value['note'],
+                    imageUrl: 'TODO',
+                    visibleName: _formKey.currentState?.value['visible-name'],
+                    visibleAddress:
+                        _formKey.currentState?.value['visible-address'],
+                    visiblePhone: _formKey.currentState?.value['visible-phone'],
+                    visibleNote: _formKey.currentState?.value['visible-note'],
+                    userId: 'TODO',
+                  ));
+                  Navigator.of(context).pop();
+                } else {
+                  print("validation failed");
+                }
+              },
             ),
           ],
         ),

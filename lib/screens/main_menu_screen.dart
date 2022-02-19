@@ -1,6 +1,10 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:goreader/models/tags.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
+import 'package:ndef/ndef.dart' as ndef;
 import 'package:provider/provider.dart';
 
 import '../widgets/custom_app_bar.dart';
@@ -64,9 +68,24 @@ class MainMenuScreen extends StatelessWidget {
     if (tag.ndefAvailable) {
       /// decoded NDEF records (see [ndef.NDEFRecord] for details)
       /// `UriRecord: id=(empty) typeNameFormat=TypeNameFormat.nfcWellKnown type=U uri=https://github.com/nfcim/ndef`
-      for (var record in await FlutterNfcKit.readNDEFRecords(cached: false)) {
-        print(record.toString());
+      var ndefRecords = await FlutterNfcKit.readNDEFRecords();
+      var ndefString = ndefRecords[0].toString();
+      if (kDebugMode) {
+        print(ndefString.split('text=')[1]);
       }
     }
+  }
+
+  void writeNfc(String id) async {
+    var tag = await FlutterNfcKit.poll();
+    try {
+      await FlutterNfcKit.writeNDEFRecords(
+          [ndef.TextRecord(language: 'en', text: id)]);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+    // decoded NDEF records
   }
 }
