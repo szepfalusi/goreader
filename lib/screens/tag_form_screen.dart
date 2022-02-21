@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:goreader/screens/my_tags_screen.dart';
 import '../models/tag.dart';
 import '../models/tags.dart';
 import '../widgets/custom_app_bar.dart';
@@ -22,15 +23,15 @@ class _TagFormScreenState extends State<TagFormScreen> {
   Widget build(BuildContext context) {
     final tagId = ModalRoute.of(context)?.settings.arguments;
     var tagData = Tag(
-        id: DateTime.now().toIso8601String(),
-        name: '',
-        note: '',
-        imageUrl: '',
-        visibleName: false,
-        visibleAddress: false,
-        visiblePhone: false,
-        visibleNote: false,
-        userId: '');
+      id: DateTime.now().toIso8601String(),
+      name: '',
+      note: '',
+      imageUrl: '',
+      visibleName: false,
+      visibleAddress: false,
+      visiblePhone: false,
+      visibleNote: false,
+    );
 
     if (tagId != null) {
       tagData = Provider.of<Tags>(context).findTag(tagId as String);
@@ -126,7 +127,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
                 "Submit",
                 style: TextStyle(color: Colors.white),
               ),
-              onPressed: () {
+              onPressed: () async {
                 _formKey.currentState?.save();
                 if (_formKey.currentState!.validate()) {
                   Provider.of<Tags>(context, listen: false).addTag(Tag(
@@ -141,8 +142,9 @@ class _TagFormScreenState extends State<TagFormScreen> {
                         _formKey.currentState?.value['visible-address'],
                     visiblePhone: _formKey.currentState?.value['visible-phone'],
                     visibleNote: _formKey.currentState?.value['visible-note'],
-                    userId: 'TODO',
                   ));
+                  await Provider.of<Tags>(context, listen: false)
+                      .getTagsFromAPI();
                   Navigator.of(context).pop();
                 } else {
                   print("validation failed");

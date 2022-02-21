@@ -44,15 +44,15 @@ class Tags with ChangeNotifier {
     var snapshot = await tagsRef.get();
     _tags = snapshot.docs
         .map((e) => Tag(
-            id: e.reference.id,
-            name: e['name'],
-            note: e['note'],
-            imageUrl: e['imageUrl'],
-            visibleName: e['visibleName'],
-            visibleAddress: e['visibleAddress'],
-            visiblePhone: e['visiblePhone'],
-            visibleNote: e['visibleNote'],
-            userId: e['userId']))
+              id: e.reference.id,
+              name: e['name'],
+              note: e['note'],
+              imageUrl: e['imageUrl'],
+              visibleName: e['visibleName'],
+              visibleAddress: e['visibleAddress'],
+              visiblePhone: e['visiblePhone'],
+              visibleNote: e['visibleNote'],
+            ))
         .toList();
     notifyListeners();
   }
@@ -66,7 +66,17 @@ class Tags with ChangeNotifier {
           .then((value) => getTagsFromAPI())
           .catchError((error) => print(error));
     } else {
-      tagsRef.add(tag.toJson()).then((value) {
+      tagsRef.add({
+        'id': tag.id,
+        'name': tag.name,
+        'note': tag.note,
+        'imageUrl': tag.imageUrl,
+        'visibleName': tag.visibleName,
+        'visibleAddress': tag.visibleAddress,
+        'visiblePhone': tag.visiblePhone,
+        'visibleNote': tag.visibleNote,
+        'userId': 'TODO'
+      }).then((value) {
         _tags.add(tag);
         print("Tag Added");
         notifyListeners();

@@ -9,7 +9,7 @@ import 'package:provider/provider.dart';
 
 class MyTagsScreen extends StatelessWidget {
   static String routeName = '/my-tags-screen';
-  Future<void> rebuildTags(BuildContext context) async {
+  static Future<void> rebuildTags(BuildContext context) async {
     await Provider.of<Tags>(context, listen: false).getTagsFromAPI();
   }
 

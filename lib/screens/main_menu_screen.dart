@@ -8,6 +8,7 @@ import 'package:ndef/ndef.dart' as ndef;
 import 'package:provider/provider.dart';
 
 import '../widgets/custom_app_bar.dart';
+import 'auth_screen.dart';
 import 'found_tag_screen.dart';
 import 'my_tags_screen.dart';
 import 'profile_screen.dart';
@@ -49,8 +50,10 @@ class MainMenuScreen extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             ElevatedButton(
-              onPressed: () {},
-              child: const Text('Log out'),
+              onPressed: () {
+                Navigator.of(context).pushNamed(AuthScreen.routeName);
+              },
+              child: const Text('Sign out'),
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.red)),
             ),
