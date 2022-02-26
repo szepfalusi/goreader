@@ -4,7 +4,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:goreader/screens/auth_screen.dart';
+import 'package:goreader/screens/login_screen.dart';
+import 'package:goreader/screens/signup_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
@@ -58,7 +59,8 @@ class MyApp extends StatelessWidget {
           MyTagsScreen.routeName: (ctx) => MyTagsScreen(),
           TagFormScreen.routeName: (ctx) => TagFormScreen(),
           ProfileScreen.routeName: (ctx) => ProfileScreen(),
-          AuthScreen.routeName: (ctx) => AuthScreen(),
+          SignUpScreen.routeName: (ctx) => SignUpScreen(),
+          LogInScreen.routeName: (ctx) => LogInScreen(),
         },
       ),
     );

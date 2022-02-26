@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:goreader/helpers/authentication_helper.dart';
+import 'package:goreader/screens/signup_screen.dart';
 import 'package:goreader/widgets/custom_app_bar.dart';
+import 'dart:developer';
 
-class AuthScreen extends StatelessWidget {
-  static String routeName = '/auth-screen';
+final _formKey = GlobalKey<FormBuilderState>();
 
-  final _formKey = GlobalKey<FormBuilderState>();
+class LogInScreen extends StatelessWidget {
+  static String routeName = '/login-screen';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar('Authentication'),
+      appBar: customAppBar('Log in'),
       body: Padding(
         padding: const EdgeInsets.all(5),
         child: Column(
@@ -50,10 +53,29 @@ class AuthScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                _formKey.currentState?.validate();
                 _formKey.currentState?.save();
-                print(_formKey.currentState?.value);
+                print(_formKey.currentState!.value['email']);
+                AuthenticationHelper()
+                    .signIn(
+                        email: _formKey.currentState!.value['email'],
+                        password: _formKey.currentState!.value['password'])
+                    .then((value) {
+                  if (value == null) {
+                    Navigator.of(context).pop();
+                  } else {
+                    log(value);
+                  }
+                });
               },
-              child: const Text('Log in / Sign up'),
+              child: const Text('Log in'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(SignUpScreen.routeName);
+              },
+              child: const Text('Don\'t have an account yet? Sign up'),
             )
           ],
         ),
