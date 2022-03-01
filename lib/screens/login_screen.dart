@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:goreader/helpers/authentication_helper.dart';
-import 'package:goreader/screens/signup_screen.dart';
-import 'package:goreader/widgets/custom_app_bar.dart';
+import '../helpers/authentication_helper.dart';
+import 'signup_screen.dart';
+import '../widgets/custom_app_bar.dart';
 import 'dart:developer';
 
 final _formKey = GlobalKey<FormBuilderState>();

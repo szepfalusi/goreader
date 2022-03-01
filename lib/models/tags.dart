@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:goreader/helpers/authentication_helper.dart';
+import '../helpers/authentication_helper.dart';
 import 'tag.dart';
 import 'user.dart';
 
@@ -76,7 +76,7 @@ class Tags with ChangeNotifier {
         'visibleAddress': tag.visibleAddress,
         'visiblePhone': tag.visiblePhone,
         'visibleNote': tag.visibleNote,
-        'userId': AuthenticationHelper()
+        'userId': 'TODO'
       }).then((value) {
         _tags.add(tag);
         print("Tag Added");

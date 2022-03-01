@@ -1,28 +1,28 @@
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:goreader/helpers/authentication_helper.dart';
-import 'package:goreader/helpers/nfc_helper.dart';
-import 'package:goreader/models/tags.dart';
-import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
-import 'package:goreader/screens/login_screen.dart';
-import 'package:ndef/ndef.dart' as ndef;
+import '../helpers/authentication_helper.dart';
+import '../helpers/nfc_helper.dart';
+import '../models/tags.dart';
+import 'login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/custom_app_bar.dart';
-import 'signup_screen.dart';
 import 'found_tag_screen.dart';
 import 'my_tags_screen.dart';
 import 'profile_screen.dart';
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({Key? key}) : super(key: key);
 
   @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  @override
   Widget build(BuildContext context) {
-    final isAuthenticated = AuthenticationHelper.isAuthenticated;
+    final isAuthenticated = false;
     final nfcHelper = NfcHelper();
 
     return Scaffold(
@@ -40,34 +40,37 @@ class MainMenuScreen extends StatelessWidget {
               child: const Text('I found a tag'),
             ),
             const SizedBox(height: 5),
-            isAuthenticated
-                ? ElevatedButton(
-                    onPressed: () async {
-                      await Provider.of<Tags>(context, listen: false)
-                          .getTagsFromAPI();
-                      Navigator.of(context).pushNamed(MyTagsScreen.routeName);
-                    },
-                    child: const Text('My tags'),
-                  )
-                : const ElevatedButton(onPressed: null, child: Text('My tags')),
-            const SizedBox(height: 5),
-            isAuthenticated
-                ? ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(ProfileScreen.routeName);
-                    },
-                    child: const Text('My profile'),
-                  )
-                : ElevatedButton(onPressed: null, child: Text('My profile')),
+            ElevatedButton(
+              onPressed: () async {
+                if (AuthenticationHelper().userId == null) {
+                  log('no access to tags');
+                  return;
+                }
+                await Provider.of<Tags>(context, listen: false)
+                    .getTagsFromAPI();
+                Navigator.of(context).pushNamed(MyTagsScreen.routeName);
+              },
+              child: const Text('My tags'),
+            ),
             const SizedBox(height: 5),
             ElevatedButton(
               onPressed: () {
-                if (isAuthenticated) {
+                if (AuthenticationHelper().userId == null) {
+                  return;
+                }
+                Navigator.of(context).pushNamed(ProfileScreen.routeName);
+              },
+              child: const Text('My profile'),
+            ),
+            const SizedBox(height: 5),
+            ElevatedButton(
+              onPressed: () {
+                if (AuthenticationHelper().userId != null) {
                   AuthenticationHelper().signOut();
                 }
                 Navigator.of(context).pushNamed(LogInScreen.routeName);
               },
-              child: isAuthenticated
+              child: AuthenticationHelper().userId != null
                   ? const Text('Sign out')
                   : const Text('Log in'),
               style: ButtonStyle(

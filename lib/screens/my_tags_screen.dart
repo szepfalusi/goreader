@@ -4,7 +4,7 @@ import '../models/tags.dart';
 import 'tag_form_screen.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/tag_item.dart';
-import 'package:goreader/widgets/tag_list_item.dart';
+import '../widgets/tag_list_item.dart';
 import 'package:provider/provider.dart';
 
 class MyTagsScreen extends StatelessWidget {

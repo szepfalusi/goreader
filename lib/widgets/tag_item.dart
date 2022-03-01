@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:goreader/models/tags.dart';
-import 'package:goreader/screens/tag_form_screen.dart';
+import '../models/tags.dart';
+import '../screens/tag_form_screen.dart';
 import 'package:provider/provider.dart';
 
 class TagItem extends StatelessWidget {

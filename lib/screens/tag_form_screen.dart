@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:form_builder_image_picker/form_builder_image_picker.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:goreader/screens/my_tags_screen.dart';
+import 'my_tags_screen.dart';
 import '../models/tag.dart';
 import '../models/tags.dart';
 import '../widgets/custom_app_bar.dart';
