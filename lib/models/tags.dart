@@ -1,8 +1,10 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../helpers/authentication_helper.dart';
 import 'tag.dart';
-import 'user.dart';
+import 'custom_user.dart';
 
 class Tags with ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -42,6 +44,7 @@ class Tags with ChangeNotifier {
   }
 
   Future<void> getTagsFromAPI() async {
+    final userId = AuthenticationHelper().userId;
     var snapshot = await tagsRef.get();
     _tags = snapshot.docs
         .map((e) => Tag(
@@ -53,14 +56,17 @@ class Tags with ChangeNotifier {
               visibleAddress: e['visibleAddress'],
               visiblePhone: e['visiblePhone'],
               visibleNote: e['visibleNote'],
+              userId: e['userId'],
             ))
+        .where((element) => element.userId == userId)
         .toList();
     notifyListeners();
   }
 
   Future<void> addTag(Tag tag) async {
+    final userId = AuthenticationHelper().userId;
     var tagModify = await tagsRef.doc(tag.id).get();
-    if (tagModify.exists) {
+    if (tagModify.exists && tagModify['userId'] == userId) {
       tagsRef
           .doc(tag.id)
           .update(tag.toJson())
@@ -76,7 +82,7 @@ class Tags with ChangeNotifier {
         'visibleAddress': tag.visibleAddress,
         'visiblePhone': tag.visiblePhone,
         'visibleNote': tag.visibleNote,
-        'userId': 'TODO'
+        'userId': userId,
       }).then((value) {
         _tags.add(tag);
         print("Tag Added");

@@ -31,6 +31,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
       visibleAddress: false,
       visiblePhone: false,
       visibleNote: false,
+      userId: '',
     );
 
     if (tagId != null) {
@@ -142,6 +143,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
                         _formKey.currentState?.value['visible-address'],
                     visiblePhone: _formKey.currentState?.value['visible-phone'],
                     visibleNote: _formKey.currentState?.value['visible-note'],
+                    userId: '',
                   ));
                   await Provider.of<Tags>(context, listen: false)
                       .getTagsFromAPI();

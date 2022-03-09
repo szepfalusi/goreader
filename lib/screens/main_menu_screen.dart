@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:goreader/models/custom_user.dart';
+import 'package:goreader/models/custom_user_provider.dart';
 import '../helpers/authentication_helper.dart';
 import '../helpers/nfc_helper.dart';
 import '../models/tags.dart';
@@ -14,6 +16,7 @@ import 'profile_screen.dart';
 
 class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({Key? key}) : super(key: key);
+  static const routeName = '/main-menu';
 
   @override
   State<MainMenuScreen> createState() => _MainMenuScreenState();
@@ -41,24 +44,34 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ),
             const SizedBox(height: 5),
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 if (AuthenticationHelper().userId == null) {
                   log('no access to tags');
                   return;
                 }
-                await Provider.of<Tags>(context, listen: false)
-                    .getTagsFromAPI();
                 Navigator.of(context).pushNamed(MyTagsScreen.routeName);
               },
               child: const Text('My tags'),
             ),
             const SizedBox(height: 5),
             ElevatedButton(
-              onPressed: () {
-                if (AuthenticationHelper().userId == null) {
+              onPressed: () async {
+                final userId = AuthenticationHelper().userId;
+                if (userId == null) {
                   return;
                 }
-                Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                if (Provider.of<CustomUserProvider>(context, listen: false)
+                        .getUser()
+                        .id ==
+                    '') {
+                  Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                } else {
+                  await Provider.of<CustomUserProvider>(context, listen: false)
+                      .getUserFromAPI()
+                      .then((value) {
+                    Navigator.of(context).pushNamed(ProfileScreen.routeName);
+                  });
+                }
               },
               child: const Text('My profile'),
             ),
@@ -67,8 +80,11 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               onPressed: () {
                 if (AuthenticationHelper().userId != null) {
                   AuthenticationHelper().signOut();
+                  setState(() {});
                 }
-                Navigator.of(context).pushNamed(LogInScreen.routeName);
+                Navigator.of(context)
+                    .pushNamed(LogInScreen.routeName)
+                    .then((value) => setState(() {}));
               },
               child: AuthenticationHelper().userId != null
                   ? const Text('Sign out')

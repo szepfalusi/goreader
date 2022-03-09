@@ -7,10 +7,21 @@ import '../widgets/tag_item.dart';
 import '../widgets/tag_list_item.dart';
 import 'package:provider/provider.dart';
 
-class MyTagsScreen extends StatelessWidget {
+class MyTagsScreen extends StatefulWidget {
   static String routeName = '/my-tags-screen';
-  static Future<void> rebuildTags(BuildContext context) async {
-    await Provider.of<Tags>(context, listen: false).getTagsFromAPI();
+  // static Future<void> rebuildTags(BuildContext context) async {
+  //   await Provider.of<Tags>(context, listen: false).getTagsFromAPI();
+  // }
+
+  @override
+  State<MyTagsScreen> createState() => _MyTagsScreenState();
+}
+
+class _MyTagsScreenState extends State<MyTagsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<Tags>(context, listen: false).getTagsFromAPI();
   }
 
   @override
@@ -20,7 +31,9 @@ class MyTagsScreen extends StatelessWidget {
     return Scaffold(
       appBar: customAppBar('My tags'),
       body: RefreshIndicator(
-        onRefresh: () => rebuildTags(context),
+        onRefresh: () async {
+          await Provider.of<Tags>(context, listen: false).getTagsFromAPI();
+        },
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Consumer<Tags>(builder: (_, tagsData, widget) {

@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
-
-class Tag extends ChangeNotifier {
+class Tag {
   final String id;
   final String name;
   final String note;
@@ -9,6 +7,7 @@ class Tag extends ChangeNotifier {
   final bool visibleAddress;
   final bool visiblePhone;
   final bool visibleNote;
+  final String userId;
 
   Tag({
     required this.id,
@@ -19,6 +18,7 @@ class Tag extends ChangeNotifier {
     required this.visibleAddress,
     required this.visiblePhone,
     required this.visibleNote,
+    required this.userId,
   });
 
   Map<String, dynamic> toJson() => {

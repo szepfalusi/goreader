@@ -54,8 +54,8 @@ class SignUpScreen extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
-                _formKey.currentState?.validate();
                 _formKey.currentState?.save();
+                _formKey.currentState?.validate();
                 print(_formKey.currentState!.value['email']);
                 AuthenticationHelper()
                     .signUp(
