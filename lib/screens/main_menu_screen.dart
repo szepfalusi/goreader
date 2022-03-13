@@ -37,7 +37,6 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
           children: [
             ElevatedButton(
               onPressed: () {
-                nfcHelper.readNfc();
                 Navigator.of(context).pushNamed(FoundTagScreen.routeName);
               },
               child: const Text('I found a tag'),
@@ -46,7 +45,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ElevatedButton(
               onPressed: () {
                 if (AuthenticationHelper().userId == null) {
-                  log('no access to tags');
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please log in to use this feature.')));
                   return;
                 }
                 Navigator.of(context).pushNamed(MyTagsScreen.routeName);
@@ -58,20 +59,18 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               onPressed: () async {
                 final userId = AuthenticationHelper().userId;
                 if (userId == null) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please log in to use this feature.'),
+                    ),
+                  );
                   return;
                 }
-                if (Provider.of<CustomUserProvider>(context, listen: false)
-                        .getUser()
-                        .id ==
-                    '') {
-                  Navigator.of(context).pushNamed(ProfileScreen.routeName);
-                } else {
-                  await Provider.of<CustomUserProvider>(context, listen: false)
-                      .getUserFromAPI()
-                      .then((value) {
-                    Navigator.of(context).pushNamed(ProfileScreen.routeName);
-                  });
-                }
+
+                await Provider.of<CustomUserProvider>(context, listen: false)
+                    .getUserFromAPI();
+                Navigator.of(context).pushNamed(ProfileScreen.routeName);
               },
               child: const Text('My profile'),
             ),

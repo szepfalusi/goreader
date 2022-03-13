@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -22,17 +26,8 @@ class _TagFormScreenState extends State<TagFormScreen> {
   @override
   Widget build(BuildContext context) {
     final tagId = ModalRoute.of(context)?.settings.arguments;
-    var tagData = Tag(
-      id: DateTime.now().toIso8601String(),
-      name: '',
-      note: '',
-      imageUrl: '',
-      visibleName: false,
-      visibleAddress: false,
-      visiblePhone: false,
-      visibleNote: false,
-      userId: '',
-    );
+    Tag? tagData;
+    File? imageFile;
 
     if (tagId != null) {
       tagData = Provider.of<Tags>(context).findTag(tagId as String);
@@ -51,7 +46,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
                   FormBuilderTextField(
                     textAlign: TextAlign.center,
                     name: 'name',
-                    initialValue: tagData.name,
+                    initialValue: tagData?.name ?? '',
                     decoration: const InputDecoration(
                       labelText: 'Tag name',
                     ),
@@ -68,7 +63,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
                         const Text('Import these datas from profile?'),
                         FormBuilderCheckbox(
                           name: 'visible-name',
-                          initialValue: tagData.visibleName,
+                          initialValue: tagData?.visibleName ?? false,
                           title: const Text(
                             'Visible name',
                             style: TextStyle(fontSize: 18),
@@ -76,7 +71,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
                         ),
                         FormBuilderCheckbox(
                           name: 'visible-address',
-                          initialValue: tagData.visibleAddress,
+                          initialValue: tagData?.visibleAddress ?? false,
                           title: const Text(
                             'Visible address',
                             style: TextStyle(fontSize: 18),
@@ -84,7 +79,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
                         ),
                         FormBuilderCheckbox(
                           name: 'visible-phone',
-                          initialValue: tagData.visiblePhone,
+                          initialValue: tagData?.visiblePhone ?? false,
                           title: const Text(
                             'Visible phone number',
                             style: TextStyle(fontSize: 18),
@@ -92,7 +87,7 @@ class _TagFormScreenState extends State<TagFormScreen> {
                         ),
                         FormBuilderCheckbox(
                           name: 'visible-note',
-                          initialValue: tagData.visibleNote,
+                          initialValue: tagData?.visibleNote ?? false,
                           title: const Text(
                             'Visible note',
                             style: TextStyle(fontSize: 18),
@@ -102,14 +97,25 @@ class _TagFormScreenState extends State<TagFormScreen> {
                     ),
                   ),
                   FormBuilderImagePicker(
-                    name: 'image_picker',
+                    name: 'imageUrl',
+                    initialValue: [
+                      tagData?.imageUrl == '' ? null : tagData?.imageUrl
+                    ],
                     decoration:
                         const InputDecoration(labelText: 'Upload your photo'),
                     maxImages: 1,
+                    imageQuality: 30,
+                    onSaved: (images) {
+                      // log('onSaved has started');
+                      images?.forEach((element) async {
+                        File newImage = File(element.path.toString());
+                        imageFile = newImage;
+                      });
+                    },
                   ),
                   FormBuilderTextField(
                     name: 'note',
-                    initialValue: tagData.note,
+                    initialValue: tagData?.note ?? '',
                     decoration: const InputDecoration(
                       labelText: 'Any note for this tag.',
                     ),
@@ -131,13 +137,23 @@ class _TagFormScreenState extends State<TagFormScreen> {
               onPressed: () async {
                 _formKey.currentState?.save();
                 if (_formKey.currentState!.validate()) {
+                  var imageUrlDb = tagData?.imageUrl ?? '';
+                  if (imageFile != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                            'Image is uploading to the magic cloud, please wait...'),
+                      ),
+                    );
+                    imageUrlDb = await Provider.of<Tags>(context, listen: false)
+                        .saveImageURL(imageFile!);
+                  }
+                  log('ImageUrl' + imageUrlDb);
                   Provider.of<Tags>(context, listen: false).addTag(Tag(
-                    id: tagData.id != ''
-                        ? tagData.id
-                        : DateTime.now().toIso8601String(),
+                    id: tagData?.id ?? ' ',
                     name: _formKey.currentState?.value['name'],
                     note: _formKey.currentState?.value['note'],
-                    imageUrl: 'TODO',
+                    imageUrl: imageUrlDb,
                     visibleName: _formKey.currentState?.value['visible-name'],
                     visibleAddress:
                         _formKey.currentState?.value['visible-address'],

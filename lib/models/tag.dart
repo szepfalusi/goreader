@@ -31,4 +31,16 @@ class Tag {
         'visiblePhone': visiblePhone,
         'visibleNote': visibleNote,
       };
+  Tag setIdFromFirebase(String id, Tag tag) {
+    return Tag(
+        id: id,
+        name: tag.name,
+        note: tag.note,
+        imageUrl: tag.imageUrl,
+        userId: tag.userId,
+        visibleAddress: tag.visibleAddress,
+        visibleName: tag.visibleName,
+        visibleNote: tag.visibleNote,
+        visiblePhone: tag.visiblePhone);
+  }
 }

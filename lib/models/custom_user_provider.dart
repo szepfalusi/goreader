@@ -11,7 +11,7 @@ import 'custom_user.dart';
 
 class CustomUserProvider extends ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference userRef = FirebaseFirestore.instance.collection('user');
+  CollectionReference userRef = FirebaseFirestore.instance.collection('users');
   CustomUser _customUser = CustomUser(id: '');
 
   get user => _customUser;
@@ -31,7 +31,7 @@ class CustomUserProvider extends ChangeNotifier {
       'id': userId,
       'name': user.name,
       'address': user.address,
-      'phoneNumber': user.phoneNumber,
+      'phoneNumber': user.phoneNumber != '' ? '+' + user.phoneNumber : '',
       'note': user.note,
     }).then((value) {
       _customUser = CustomUser(
@@ -50,6 +50,9 @@ class CustomUserProvider extends ChangeNotifier {
     final userId = AuthenticationHelper().userId;
 
     var userDoc = await userRef.doc(userId).get();
+    if (!userDoc.exists) {
+      return CustomUser(id: userId);
+    }
     _customUser = CustomUser(
         id: userId,
         name: userDoc['name'],
@@ -63,5 +66,18 @@ class CustomUserProvider extends ChangeNotifier {
 
   CustomUser getUser() {
     return _customUser;
+  }
+
+  Future<CustomUser> getUserData(String userId) async {
+    var userDoc = await userRef.doc(userId).get();
+    if (!userDoc.exists) {
+      return CustomUser(id: userId);
+    }
+    return CustomUser(
+        id: userId,
+        name: userDoc['name'],
+        phoneNumber: userDoc['phoneNumber'],
+        address: userDoc['address'],
+        note: userDoc['note']);
   }
 }

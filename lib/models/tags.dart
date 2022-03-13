@@ -1,14 +1,21 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
+import 'package:goreader/models/view_tag.dart';
+import 'package:provider/provider.dart';
 import '../helpers/authentication_helper.dart';
+import 'custom_user_provider.dart';
 import 'tag.dart';
 import 'custom_user.dart';
 
 class Tags with ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference tagsRef = FirebaseFirestore.instance.collection('tags');
+  CollectionReference usersRef = FirebaseFirestore.instance.collection('users');
 
   List<Tag> _tags = [
     // Tag(
@@ -39,8 +46,30 @@ class Tags with ChangeNotifier {
     return [..._tags];
   }
 
-  Tag findTag(String id) {
-    return _tags.firstWhere((element) => element.id == id);
+  Tag? findTag(String id) {
+    return _tags.firstWhereOrNull((element) => element.id == id);
+  }
+
+  Future<ViewTag> findTagFromFirebase(String id) async {
+    final firebaseJson = await tagsRef.doc(id).get();
+    print(firebaseJson);
+    if (firebaseJson.exists) {
+      final tagData = firebaseJson.data() as Map<String, dynamic>;
+      final userRef = await usersRef.doc(tagData['userId']).get();
+      final userData = userRef.data() as Map<String, dynamic>;
+      return ViewTag(
+        tagName: tagData['name'],
+        imageUrl: tagData['imageUrl'],
+        note: tagData['note'],
+        userName: tagData['visibleName'] == true ? userData['name'] : '',
+        userAddress:
+            tagData['visibleAddress'] == true ? userData['address'] : '',
+        userNote: tagData['visibleNote'] == true ? userData['note'] : '',
+        userPhone:
+            tagData['visiblePhone'] == true ? userData['phoneNumber'] : '',
+      );
+    }
+    return ViewTag();
   }
 
   Future<void> getTagsFromAPI() async {
@@ -74,7 +103,6 @@ class Tags with ChangeNotifier {
           .catchError((error) => print(error));
     } else {
       tagsRef.add({
-        'id': tag.id,
         'name': tag.name,
         'note': tag.note,
         'imageUrl': tag.imageUrl,
@@ -84,7 +112,7 @@ class Tags with ChangeNotifier {
         'visibleNote': tag.visibleNote,
         'userId': userId,
       }).then((value) {
-        _tags.add(tag);
+        _tags.add(tag.setIdFromFirebase(value.id, tag));
         print("Tag Added");
         notifyListeners();
       }).catchError((error) => print("Failed to add tag: $error"));
@@ -99,5 +127,16 @@ class Tags with ChangeNotifier {
       },
     ).catchError(
         (error) => print('Something went wrong at removing this tag.'));
+  }
+
+  Future<String> saveImageURL(File imgFile) async {
+    var url = '';
+    Reference storageRef = FirebaseStorage.instance
+        .ref()
+        .child('image' + DateTime.now().toIso8601String());
+    await storageRef.putFile(imgFile).whenComplete(() async {
+      url = await storageRef.getDownloadURL();
+    });
+    return url;
   }
 }
