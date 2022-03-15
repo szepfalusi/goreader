@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:ndef/ndef.dart' as ndef;
 
@@ -25,7 +22,7 @@ class NfcHelper {
 
   Future writeNfc(String tagId) async {
     var tag = await FlutterNfcKit.poll(
-        timeout: Duration(seconds: 10),
+        timeout: const Duration(seconds: 10),
         iosMultipleTagMessage: "Multiple tags found!",
         iosAlertMessage: "Scan your tag");
     if (tag.ndefAvailable) {

@@ -1,13 +1,13 @@
+// ignore_for_file: invalid_return_type_for_catch_error
+
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../helpers/authentication_helper.dart';
-import 'tag.dart';
-import 'tags.dart';
-import 'package:provider/provider.dart';
 
+import '../helpers/authentication_helper.dart';
 import 'custom_user.dart';
+import 'tag.dart';
 
 class CustomUserProvider extends ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -18,15 +18,7 @@ class CustomUserProvider extends ChangeNotifier {
 
   Future<void> addUser(CustomUser user, List<Tag> tags) async {
     final userId = AuthenticationHelper().userId;
-    var userModify = await userRef.doc(user.id).get();
     var userDoc = userRef.doc(user.id);
-    // if (userModify.exists && userModify['id'] == userId) {
-    //   userRef
-    //       .doc(user.id)
-    //       .update(user.toJson())
-    //       .then((value) => getUsersFromAPI())
-    //       .catchError((error) => print(error));
-    // }
     userDoc.set({
       'id': userId,
       'name': user.name,

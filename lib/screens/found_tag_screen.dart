@@ -1,15 +1,15 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../models/custom_user_provider.dart';
-import '../models/tags.dart';
-import '../widgets/tag_details.dart';
 import 'package:provider/provider.dart';
-import '../models/custom_user.dart';
+
+import '../helpers/nfc_helper.dart';
+import '../models/tags.dart';
 import '../models/view_tag.dart';
 import '../widgets/custom_app_bar.dart';
-import '../helpers/nfc_helper.dart';
+import '../widgets/tag_details.dart';
 
 class FoundTagScreen extends StatefulWidget {
   static String routeName = '/found';
@@ -27,10 +27,9 @@ class _FoundTagState extends State<FoundTagScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    ViewTag tag = ViewTag();
+    tag = ViewTag();
     isRead = false;
-    String errorMessage = '';
+    errorMessage = '';
 
     super.initState();
   }
@@ -39,7 +38,7 @@ class _FoundTagState extends State<FoundTagScreen> {
   Widget build(BuildContext context) {
     if (!isRead) {
       nfcHelper.readNfc().then((value) {
-        print('nfc value: ' + value);
+        log('nfc value: ' + value);
         if (value != 'try-again') {
           Provider.of<Tags>(context, listen: false)
               .findTagFromFirebase(value)
@@ -54,7 +53,9 @@ class _FoundTagState extends State<FoundTagScreen> {
           });
         }
       }).onError((error, stackTrace) {
-        print(error);
+        if (kDebugMode) {
+          print(error);
+        }
         final tempErr = error as PlatformException;
         if (tempErr.code == '404') {
           log('nonfc');

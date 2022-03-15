@@ -1,13 +1,6 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:goreader/helpers/email_helper.dart';
-import '../models/tag.dart';
 import '../models/view_tag.dart';
 import '../screens/found_tag_screen.dart';
-import 'custom_app_bar.dart';
-import 'package:provider/provider.dart';
 
 tagDetails(BuildContext context, ViewTag tag, String error) {
   if (!tag.isEmpty()) {

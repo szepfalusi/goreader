@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/tags.dart';
 import '../models/view_tag.dart';
 
 class EmailHelper {
@@ -29,6 +27,6 @@ class EmailHelper {
         }
       }),
     );
-    print(response.body);
+    log('Email sending response: ' + response.body);
   }
 }

@@ -1,16 +1,11 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import '../models/custom_user.dart';
-import '../models/custom_user_provider.dart';
-import '../helpers/authentication_helper.dart';
-import '../helpers/nfc_helper.dart';
-import '../models/tags.dart';
-import 'login_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/authentication_helper.dart';
+import '../models/custom_user_provider.dart';
 import '../widgets/custom_app_bar.dart';
 import 'found_tag_screen.dart';
+import 'login_screen.dart';
 import 'my_tags_screen.dart';
 import 'profile_screen.dart';
 
@@ -25,9 +20,6 @@ class MainMenuScreen extends StatefulWidget {
 class _MainMenuScreenState extends State<MainMenuScreen> {
   @override
   Widget build(BuildContext context) {
-    final isAuthenticated = false;
-    final nfcHelper = NfcHelper();
-
     return Scaffold(
       appBar: customAppBar("GoReader"),
       body: Center(
@@ -50,6 +42,16 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       content: Text('Please log in to use this feature.')));
                   return;
                 }
+                if (!AuthenticationHelper().emailVerified) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please verify your email.'),
+                    ),
+                  );
+                  return;
+                }
+
                 Navigator.of(context).pushNamed(MyTagsScreen.routeName);
               },
               child: const Text('My tags'),

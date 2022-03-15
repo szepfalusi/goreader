@@ -1,16 +1,16 @@
+// ignore_for_file: invalid_return_type_for_catch_error
+
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:collection/collection.dart';
-import 'view_tag.dart';
-import 'package:provider/provider.dart';
+
 import '../helpers/authentication_helper.dart';
-import 'custom_user_provider.dart';
 import 'tag.dart';
-import 'custom_user.dart';
+import 'view_tag.dart';
 
 class Tags with ChangeNotifier {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -52,7 +52,6 @@ class Tags with ChangeNotifier {
 
   Future<ViewTag> findTagFromFirebase(String id) async {
     final firebaseJson = await tagsRef.doc(id).get();
-    print(firebaseJson);
     if (firebaseJson.exists) {
       final tagData = firebaseJson.data() as Map<String, dynamic>;
       final userRef = await usersRef.doc(tagData['userId']).get();
@@ -107,7 +106,7 @@ class Tags with ChangeNotifier {
           .doc(tag.id)
           .update(tag.toJson())
           .then((value) => getTagsFromAPI())
-          .catchError((error) => print(error));
+          .catchError((error) => log(error));
     } else {
       tagsRef.add({
         'name': tag.name,
@@ -121,9 +120,8 @@ class Tags with ChangeNotifier {
         'email': email
       }).then((value) {
         _tags.add(tag.setIdFromFirebase(value.id, tag));
-        print("Tag Added");
         notifyListeners();
-      }).catchError((error) => print("Failed to add tag: $error"));
+      }).catchError((error) => log("Failed to add tag: $error"));
     }
   }
 
@@ -133,8 +131,8 @@ class Tags with ChangeNotifier {
         _tags.removeWhere((element) => element.id == id);
         notifyListeners();
       },
-    ).catchError(
-        (error) => print('Something went wrong at removing this tag.'));
+    ).catchError((error) =>
+        log('During removing this tag, this error has occured' + error));
   }
 
   Future<String> saveImageURL(File imgFile) async {

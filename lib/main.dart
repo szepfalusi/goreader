@@ -1,21 +1,18 @@
-import 'dart:ui';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'models/custom_user.dart';
-import 'models/custom_user_provider.dart';
-import 'screens/login_screen.dart';
-import 'screens/signup_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
+import 'models/custom_user_provider.dart';
 import 'models/tags.dart';
 import 'screens/found_tag_screen.dart';
+import 'screens/login_screen.dart';
 import 'screens/main_menu_screen.dart';
 import 'screens/my_tags_screen.dart';
 import 'screens/profile_screen.dart';
+import 'screens/signup_screen.dart';
 import 'screens/tag_form_screen.dart';
 
 void main() async {
@@ -23,10 +20,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -57,15 +56,15 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        localizationsDelegates: [FormBuilderLocalizations.delegate],
+        localizationsDelegates: const [FormBuilderLocalizations.delegate],
         home: const MainMenuScreen(),
         routes: {
-          FoundTagScreen.routeName: (ctx) => FoundTagScreen(),
-          MyTagsScreen.routeName: (ctx) => MyTagsScreen(),
-          TagFormScreen.routeName: (ctx) => TagFormScreen(),
-          ProfileScreen.routeName: (ctx) => ProfileScreen(),
-          SignUpScreen.routeName: (ctx) => SignUpScreen(),
-          LogInScreen.routeName: (ctx) => LogInScreen(),
+          FoundTagScreen.routeName: (ctx) => const FoundTagScreen(),
+          MyTagsScreen.routeName: (ctx) => const MyTagsScreen(),
+          TagFormScreen.routeName: (ctx) => const TagFormScreen(),
+          ProfileScreen.routeName: (ctx) => const ProfileScreen(),
+          SignUpScreen.routeName: (ctx) => const SignUpScreen(),
+          LogInScreen.routeName: (ctx) => const LogInScreen(),
         },
       ),
     );

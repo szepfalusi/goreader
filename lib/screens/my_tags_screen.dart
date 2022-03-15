@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
-import '../models/tag.dart';
 import '../models/tags.dart';
 import 'tag_form_screen.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/tag_item.dart';
-import '../widgets/tag_list_item.dart';
 import 'package:provider/provider.dart';
 
 class MyTagsScreen extends StatefulWidget {
   static String routeName = '/my-tags-screen';
-  // static Future<void> rebuildTags(BuildContext context) async {
-  //   await Provider.of<Tags>(context, listen: false).getTagsFromAPI();
-  // }
+
+  const MyTagsScreen({Key? key}) : super(key: key);
 
   @override
   State<MyTagsScreen> createState() => _MyTagsScreenState();
@@ -26,6 +23,7 @@ class _MyTagsScreenState extends State<MyTagsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable, this was used in this file
     final tagsData = Provider.of<Tags>(context);
 
     return Scaffold(
@@ -47,7 +45,7 @@ class _MyTagsScreenState extends State<MyTagsScreen> {
                         child: Container(
                           color: Colors.blue,
                           child: ListTile(
-                            title: Text('Add new tag'),
+                            title: const Text('Add new tag'),
                             onTap: () {
                               Navigator.of(context)
                                   .pushNamed(TagFormScreen.routeName);

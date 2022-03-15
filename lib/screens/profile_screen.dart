@@ -1,5 +1,4 @@
-import 'dart:developer';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../helpers/authentication_helper.dart';
@@ -12,6 +11,8 @@ import '../widgets/custom_app_bar.dart';
 class ProfileScreen extends StatefulWidget {
   static String routeName = '/my-profile';
 
+  const ProfileScreen({Key? key}) : super(key: key);
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -21,7 +22,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<CustomUserProvider>(context).getUser();
-    print(userData.toJson());
+    if (kDebugMode) {
+      print(userData.toJson());
+    }
     return Scaffold(
       appBar: customAppBar('My profile'),
       body: Padding(
