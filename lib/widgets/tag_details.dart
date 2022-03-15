@@ -2,16 +2,17 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:goreader/models/tag.dart';
-import 'package:goreader/models/view_tag.dart';
-import 'package:goreader/screens/found_tag_screen.dart';
-import 'package:goreader/widgets/custom_app_bar.dart';
+import 'package:goreader/helpers/email_helper.dart';
+import '../models/tag.dart';
+import '../models/view_tag.dart';
+import '../screens/found_tag_screen.dart';
+import 'custom_app_bar.dart';
 import 'package:provider/provider.dart';
 
-import '../models/tags.dart';
-
-TagDetails(BuildContext context, ViewTag tag, String error) {
+tagDetails(BuildContext context, ViewTag tag, String error) {
   if (!tag.isEmpty()) {
+    // TODO: Commented line to not overuse emailjs quota.
+    // EmailHelper().sendFoundTagMail(tag);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: ListView(
@@ -85,7 +86,7 @@ TagDetails(BuildContext context, ViewTag tag, String error) {
                   Navigator.pushReplacement(
                     context,
                     PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => FoundTagScreen(),
+                      pageBuilder: (_, __, ___) => const FoundTagScreen(),
                       transitionDuration: const Duration(seconds: 0),
                     ),
                   );
