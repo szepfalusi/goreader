@@ -65,6 +65,13 @@ class LogInScreen extends StatelessWidget {
                   if (value == null) {
                     Navigator.of(context).pop();
                   } else {
+                    if (value == 'wrong-password') {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('❗ Wrong password.❗')));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Something went wrong')));
+                    }
                     log(value);
                   }
                 });

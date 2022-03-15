@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:goreader/screens/main_menu_screen.dart';
 import '../helpers/authentication_helper.dart';
 import 'login_screen.dart';
 import '../widgets/custom_app_bar.dart';
@@ -43,6 +44,7 @@ class SignUpScreen extends StatelessWidget {
                     ),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(context),
+                      FormBuilderValidators.minLength(context, 6),
                     ]),
                     textInputAction: TextInputAction.done,
                   ),
@@ -56,16 +58,24 @@ class SignUpScreen extends StatelessWidget {
               onPressed: () {
                 _formKey.currentState?.save();
                 _formKey.currentState?.validate();
-                print(_formKey.currentState!.value['email']);
                 AuthenticationHelper()
                     .signUp(
                         email: _formKey.currentState!.value['email'],
                         password: _formKey.currentState!.value['password'])
                     .then((value) {
                   if (value == null) {
-                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('⚠️ Please verify your email. ⚠️')));
+                    Navigator.of(context).pushReplacementNamed('/');
                   } else {
-                    log(value);
+                    if (value == 'email-already-in-use') {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text(
+                              '⚠️ This email address already in use. ⚠️')));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Something went wrong')));
+                    }
                   }
                 });
               },

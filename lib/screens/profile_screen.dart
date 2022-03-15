@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:goreader/helpers/authentication_helper.dart';
-import 'package:goreader/models/custom_user.dart';
-import 'package:goreader/models/custom_user_provider.dart';
-import 'package:goreader/models/tags.dart';
+import '../helpers/authentication_helper.dart';
+import '../models/custom_user.dart';
+import '../models/custom_user_provider.dart';
+import '../models/tags.dart';
 import 'package:provider/provider.dart';
 import '../widgets/custom_app_bar.dart';
 

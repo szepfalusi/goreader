@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:goreader/models/custom_user.dart';
-import 'package:goreader/models/custom_user_provider.dart';
+import '../models/custom_user.dart';
+import '../models/custom_user_provider.dart';
 import '../helpers/authentication_helper.dart';
 import '../helpers/nfc_helper.dart';
 import '../models/tags.dart';
@@ -58,11 +58,22 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
             ElevatedButton(
               onPressed: () async {
                 final userId = AuthenticationHelper().userId;
+                final emailVerified = AuthenticationHelper().emailVerified;
+
                 if (userId == null) {
                   ScaffoldMessenger.of(context).clearSnackBars();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Please log in to use this feature.'),
+                    ),
+                  );
+                  return;
+                }
+                if (!emailVerified) {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please verify your email.'),
                     ),
                   );
                   return;

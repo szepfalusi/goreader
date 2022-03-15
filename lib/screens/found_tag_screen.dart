@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:goreader/models/custom_user_provider.dart';
-import 'package:goreader/models/tags.dart';
-import 'package:goreader/widgets/tag_details.dart';
+import '../models/custom_user_provider.dart';
+import '../models/tags.dart';
+import '../widgets/tag_details.dart';
 import 'package:provider/provider.dart';
 import '../models/custom_user.dart';
 import '../models/view_tag.dart';
@@ -74,7 +74,7 @@ class _FoundTagState extends State<FoundTagScreen> {
     return Scaffold(
       appBar: customAppBar("I found a tag"),
       body: isRead
-          ? TagDetails(context, tag, errorMessage)
+          ? tagDetails(context, tag, errorMessage)
           : const Center(child: Text('Please scan your tag.')),
     );
   }

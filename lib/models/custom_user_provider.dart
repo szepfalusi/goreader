@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:goreader/helpers/authentication_helper.dart';
-import 'package:goreader/models/tag.dart';
-import 'package:goreader/models/tags.dart';
+import '../helpers/authentication_helper.dart';
+import 'tag.dart';
+import 'tags.dart';
 import 'package:provider/provider.dart';
 
 import 'custom_user.dart';
@@ -19,7 +19,7 @@ class CustomUserProvider extends ChangeNotifier {
   Future<void> addUser(CustomUser user, List<Tag> tags) async {
     final userId = AuthenticationHelper().userId;
     var userModify = await userRef.doc(user.id).get();
-    var userDoc = await userRef.doc(user.id);
+    var userDoc = userRef.doc(user.id);
     // if (userModify.exists && userModify['id'] == userId) {
     //   userRef
     //       .doc(user.id)

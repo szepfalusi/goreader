@@ -7,6 +7,8 @@ import '../models/custom_user.dart';
 class AuthenticationHelper {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   get userId => _auth.currentUser?.uid;
+  get email => _auth.currentUser?.email;
+  get emailVerified => _auth.currentUser?.emailVerified;
 
   Future signUp({required String email, required String password}) async {
     try {
@@ -14,6 +16,7 @@ class AuthenticationHelper {
         email: email,
         password: password,
       );
+      _auth.currentUser?.sendEmailVerification();
       return null;
     } on FirebaseAuthException catch (e) {
       return e.code;

@@ -23,14 +23,14 @@ class NfcHelper {
     }
   }
 
-  Future writeNfc() async {
+  Future writeNfc(String tagId) async {
     var tag = await FlutterNfcKit.poll(
         timeout: Duration(seconds: 10),
         iosMultipleTagMessage: "Multiple tags found!",
         iosAlertMessage: "Scan your tag");
     if (tag.ndefAvailable) {
       await FlutterNfcKit.writeNDEFRecords(
-          [ndef.TextRecord(language: 'en', text: 'miafene')]);
+          [ndef.TextRecord(language: 'en', text: tagId)]);
     } else {
       return 'Something went wrong';
     }

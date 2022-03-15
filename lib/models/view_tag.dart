@@ -6,6 +6,7 @@ class ViewTag {
   final String userAddress;
   final String userPhone;
   final String userNote;
+  final String email;
 
   ViewTag({
     this.tagName = '',
@@ -15,6 +16,7 @@ class ViewTag {
     this.userAddress = '',
     this.userPhone = '',
     this.userNote = '',
+    this.email = '',
   });
 
   bool isEmpty() {
@@ -24,7 +26,8 @@ class ViewTag {
         userName == '' &&
         userAddress == '' &&
         userPhone == '' &&
-        userNote == '') {
+        userNote == '' &&
+        email == '') {
       return true;
     } else {
       return false;

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
-import 'package:goreader/models/view_tag.dart';
+import 'view_tag.dart';
 import 'package:provider/provider.dart';
 import '../helpers/authentication_helper.dart';
 import 'custom_user_provider.dart';
@@ -56,17 +56,22 @@ class Tags with ChangeNotifier {
     if (firebaseJson.exists) {
       final tagData = firebaseJson.data() as Map<String, dynamic>;
       final userRef = await usersRef.doc(tagData['userId']).get();
-      final userData = userRef.data() as Map<String, dynamic>;
+      final userData = userRef.data() as Map<String, dynamic>?;
       return ViewTag(
         tagName: tagData['name'],
         imageUrl: tagData['imageUrl'],
         note: tagData['note'],
-        userName: tagData['visibleName'] == true ? userData['name'] : '',
-        userAddress:
-            tagData['visibleAddress'] == true ? userData['address'] : '',
-        userNote: tagData['visibleNote'] == true ? userData['note'] : '',
-        userPhone:
-            tagData['visiblePhone'] == true ? userData['phoneNumber'] : '',
+        userName:
+            tagData['visibleName'] == true ? (userData?['name'] ?? '') : '',
+        userAddress: tagData['visibleAddress'] == true
+            ? (userData?['address'] ?? '')
+            : '',
+        userNote:
+            tagData['visibleNote'] == true ? (userData?['note'] ?? '') : '',
+        userPhone: tagData['visiblePhone'] == true
+            ? (userData?['phoneNumber'] ?? '')
+            : '',
+        email: tagData['email'],
       );
     }
     return ViewTag();
@@ -94,6 +99,8 @@ class Tags with ChangeNotifier {
 
   Future<void> addTag(Tag tag) async {
     final userId = AuthenticationHelper().userId;
+    final email = AuthenticationHelper().email;
+
     var tagModify = await tagsRef.doc(tag.id).get();
     if (tagModify.exists && tagModify['userId'] == userId) {
       tagsRef
@@ -111,6 +118,7 @@ class Tags with ChangeNotifier {
         'visiblePhone': tag.visiblePhone,
         'visibleNote': tag.visibleNote,
         'userId': userId,
+        'email': email
       }).then((value) {
         _tags.add(tag.setIdFromFirebase(value.id, tag));
         print("Tag Added");
