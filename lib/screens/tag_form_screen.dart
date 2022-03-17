@@ -146,6 +146,13 @@ class _TagFormScreenState extends State<TagFormScreen> {
                     );
                     imageUrlDb = await Provider.of<Tags>(context, listen: false)
                         .saveImageURL(imageFile!);
+                  } else {
+                    if (imageUrlDb != '') {
+                      log(imageUrlDb);
+                      await Provider.of<Tags>(context, listen: false)
+                          .deleteImageUrl(imageUrlDb);
+                      imageUrlDb = '';
+                    }
                   }
                   log('ImageUrl' + imageUrlDb);
                   Provider.of<Tags>(context, listen: false).addTag(Tag(

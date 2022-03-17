@@ -145,4 +145,9 @@ class Tags with ChangeNotifier {
     });
     return url;
   }
+
+  Future<void> deleteImageUrl(String imageUrl) async {
+    Reference storageRef = FirebaseStorage.instance.refFromURL(imageUrl);
+    await storageRef.delete();
+  }
 }
