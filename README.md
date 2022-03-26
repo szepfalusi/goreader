@@ -1,16 +1,10 @@
-# goreader
+# GoReader - Szakdolgozat
 
-A new Flutter project.
+Ez a git repository a Szegedi Tudományegyetem programtervező informatikus BSc hallgatóként elkészített szakdolgozatomat tartalmazza. 
 
-## Getting Started
+## Telepítés és beüzemelés VS Code IDE-ben
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Git clone
+- [Firebase beállítása](https://firebase.flutter.dev/docs/cli#generating-firebase-options)
+- A projekt mappájában terminálban futtatva: `flutter pub get`
+- Applikáció elindítása: Eszköz kiválasztása a jobb alsó sarokban, ezután: Run menüpont -> Run without Debugging 
