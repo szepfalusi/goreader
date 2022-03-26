@@ -6,7 +6,6 @@ class CustomUser with ChangeNotifier {
   final String address;
   final String phoneNumber;
   final String note;
-  final bool admin;
 
   CustomUser({
     required this.id,
@@ -14,7 +13,6 @@ class CustomUser with ChangeNotifier {
     this.address = '',
     this.phoneNumber = '',
     this.note = '',
-    this.admin = false,
   });
 
   Map<String, dynamic> toJson() => {
