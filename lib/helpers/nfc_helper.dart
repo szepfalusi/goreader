@@ -24,10 +24,13 @@ class NfcHelper {
     var tag = await FlutterNfcKit.poll(
         timeout: const Duration(seconds: 10),
         iosMultipleTagMessage: "Multiple tags found!",
-        iosAlertMessage: "Scan your tag");
+        iosAlertMessage: "Scan your tag to write");
     if (tag.ndefAvailable) {
-      await FlutterNfcKit.writeNDEFRecords(
-          [ndef.TextRecord(language: 'en', text: tagId)]);
+      await FlutterNfcKit.writeNDEFRecords([
+        ndef.TextRecord(language: 'en', text: tagId),
+        ndef.UriRecord.fromString(
+            'http://goreader.szepfalusi.hu/?tagId=' + tagId)
+      ]);
     } else {
       return 'Something went wrong';
     }

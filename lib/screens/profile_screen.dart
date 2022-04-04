@@ -56,7 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     initialValue: userData.phoneNumber,
                     decoration: const InputDecoration(
                       labelText: 'Phone number',
-                      prefix: Text('+'),
                     ),
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
@@ -92,9 +91,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           note: _formKey.currentState?.value['note'] ?? '',
                         ),
                         Provider.of<Tags>(context, listen: false).tags);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: const Text('Modifications saved succesfully.')));
               },
               child: const Text('Save'),
-            )
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  AuthenticationHelper().resetPassword();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text(
+                          'Password reset email sent to your email.')));
+                },
+                child: const Text('Reset my password'))
           ],
         ),
       ),

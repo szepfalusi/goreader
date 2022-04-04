@@ -3,6 +3,7 @@ import '../models/view_tag.dart';
 import '../screens/found_tag_screen.dart';
 
 tagDetails(BuildContext context, ViewTag tag, String error) {
+  print('ErrorMessage: ' + error);
   if (!tag.isEmpty()) {
     // TODO: Commented line to not overuse emailjs quota.
     // EmailHelper().sendFoundTagMail(tag);

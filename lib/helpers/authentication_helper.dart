@@ -19,6 +19,15 @@ class AuthenticationHelper {
     }
   }
 
+  Future resetPassword() async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return e.code;
+    }
+  }
+
   Future signIn({required String email, required String password}) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);

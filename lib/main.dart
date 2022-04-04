@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'models/custom_user_provider.dart';
 import 'models/tags.dart';
+import 'helpers/globals.dart' as globals;
 import 'screens/found_tag_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_menu_screen.dart';
@@ -16,6 +18,7 @@ import 'screens/signup_screen.dart';
 import 'screens/tag_form_screen.dart';
 
 void main() async {
+  globals.queryParam = Uri.base.queryParameters['tagId'] ?? '';
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -57,7 +60,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         localizationsDelegates: const [FormBuilderLocalizations.delegate],
-        home: const MainMenuScreen(),
+        home: kIsWeb ? const FoundTagScreen() : const MainMenuScreen(),
         routes: {
           FoundTagScreen.routeName: (ctx) => const FoundTagScreen(),
           MyTagsScreen.routeName: (ctx) => const MyTagsScreen(),

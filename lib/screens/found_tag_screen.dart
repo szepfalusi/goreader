@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../helpers/nfc_helper.dart';
+import '../helpers/globals.dart' as globals;
 import '../models/tags.dart';
 import '../models/view_tag.dart';
 import '../widgets/custom_app_bar.dart';
@@ -36,47 +37,70 @@ class _FoundTagState extends State<FoundTagScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (!isRead) {
-      nfcHelper.readNfc().then((value) {
-        log('nfc value: ' + value);
-        if (value != 'try-again') {
-          Provider.of<Tags>(context, listen: false)
-              .findTagFromFirebase(value)
-              .then((el) {
-            if (el.isEmpty()) {
-              errorMessage = 'no-goreader';
-            }
-            setState(() {
-              tag = el;
-              isRead = true;
+    if (kIsWeb && !isRead) {
+      print('Globals.queryParam' + globals.queryParam);
+      if (globals.queryParam != '') {
+        Provider.of<Tags>(context, listen: false)
+            .findTagFromFirebase(globals.queryParam)
+            .then((el) {
+          if (el.isEmpty()) {
+            errorMessage = 'no-goreader';
+          }
+          setState(() {
+            tag = el;
+            isRead = true;
+          });
+        });
+      }
+      return Scaffold(
+        appBar: customAppBar("I found a tag"),
+        body: isRead
+            ? tagDetails(context, tag, errorMessage)
+            : const Center(child: Text('Please provide a valid url.')),
+      );
+    } else {
+      if (!isRead) {
+        nfcHelper.readNfc().then((value) {
+          log('nfc value: ' + value);
+          if (value != 'try-again') {
+            Provider.of<Tags>(context, listen: false)
+                .findTagFromFirebase(value)
+                .then((el) {
+              if (el.isEmpty()) {
+                errorMessage = 'no-goreader';
+              }
+              setState(() {
+                tag = el;
+                isRead = true;
+              });
             });
-          });
-        }
-      }).onError((error, stackTrace) {
-        if (kDebugMode) {
-          print(error);
-        }
-        final tempErr = error as PlatformException;
-        if (tempErr.code == '404') {
-          log('nonfc');
-          setState(() {
-            errorMessage = 'no-nfc';
-          });
-        }
-        if (tempErr.code == '408') {
-          setState(() {
-            errorMessage = 'timeout';
-          });
-        }
-        isRead = true;
-      });
-    }
+          }
+        }).onError((error, stackTrace) {
+          if (kDebugMode) {
+            print(error);
+          }
+          final tempErr = error as PlatformException;
+          if (tempErr.code == '404') {
+            log('nonfc');
+            setState(() {
+              errorMessage = 'no-nfc';
+            });
+          }
+          if (tempErr.code == '408') {
+            setState(() {
+              errorMessage = 'timeout';
+            });
+          }
+          isRead = true;
+        });
+      }
 
-    return Scaffold(
-      appBar: customAppBar("I found a tag"),
-      body: isRead
-          ? tagDetails(context, tag, errorMessage)
-          : const Center(child: Text('Please scan your tag.')),
-    );
+      return Scaffold(
+        appBar: customAppBar("I found a tag"),
+        body: isRead
+            ? tagDetails(context, tag, errorMessage)
+            : const Center(child: Text('Please scan your tag.')),
+      );
+    }
   }
 }
